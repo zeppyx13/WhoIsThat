@@ -2,18 +2,25 @@ import cv2
 import mysql.connector
 from simple_facerec import SimpleFacerec
 import threading
+import time
 
 # Konfigurasi koneksi ke database MySQL
 db_config = {
     'host': 'localhost',
-    'user': 'root',  # Sesuaikan dengan user MySQL Anda
-    'password': '',  # Ganti dengan password MySQL Anda
+    'user': 'root',
+    'password': '',
     'database': 'face_recognition'
 }
 
-# Fungsi untuk menyimpan data deteksi ke database
+# Variabel untuk menyimpan waktu deteksi terakhir dari setiap nama
+last_detection_time = {}
+
 def save_detection_to_db(name, location=None, confidence_level=None):
     try:
+        # Convert confidence_level to float
+        if confidence_level is not None:
+            confidence_level = float(confidence_level)
+        # Db process to save the detection
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
         query = '''
@@ -48,19 +55,22 @@ def process_frame():
         frame = cv2.flip(frame, 1)
 
         # Deteksi wajah
-        face_locations, face_names = sfr.detect_known_faces(frame)
+        face_locations, face_names, confidences = sfr.detect_known_faces(frame)
 
         # Menampilkan hasil deteksi
-        for face_loc, name in zip(face_locations, face_names):
+        current_time = time.time()
+        for face_loc, name, confidence in zip(face_locations, face_names, confidences):
             y1, x2, y2, x1 = face_loc
 
             # Pastikan wajah tidak terlalu dekat dengan kamera
             if (x2 - x1) > 100 and (y2 - y1) > 100:  # Cek ukuran minimal wajah
-                cv2.putText(frame, name, (x1, y1 - 10), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 200), 2)
+                cv2.putText(frame, f"{name} ({confidence:.2f})", (x1, y1 - 10), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 200), 2)
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 200), 4)
 
-                # Simpan ke database jika wajah terdeteksi
-                save_detection_to_db(name, 'Camera 1')
+                # Periksa jeda waktu sebelum input data yang sama
+                if name not in last_detection_time or (current_time - last_detection_time[name] > 5):
+                    save_detection_to_db(name, 'Camera 1', confidence)
+                    last_detection_time[name] = current_time  # Perbarui waktu deteksi terakhir
 
         # Tampilkan frame
         cv2.imshow("Frame", frame)

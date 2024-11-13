@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4549cd73-f0a7-4ba0-8205-3b5e9722cdf1" name="Changes" comment="first commit\">
-      <change afterPath="$PROJECT_DIR$/Member/OKA.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/WhoIsThat.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/WhoIsThat.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="4549cd73-f0a7-4ba0-8205-3b5e9722cdf1" name="Changes" comment="logs deteksi mukak ke database">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Member/test.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Member/test2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/image_comparison.py" beforeDir="false" afterPath="$PROJECT_DIR$/image_comparison.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_video.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_video.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/simple_facerec.py" beforeDir="false" afterPath="$PROJECT_DIR$/simple_facerec.py" afterDir="false" />
     </list>
@@ -128,7 +122,7 @@
       <workItem from="1731327016952" duration="1629000" />
       <workItem from="1731328706614" duration="152000" />
       <workItem from="1731329030483" duration="1720000" />
-      <workItem from="1731529142983" duration="2902000" />
+      <workItem from="1731529142983" duration="3864000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <option name="closed" value="true" />
@@ -146,7 +140,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731329226945</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="logs deteksi mukak ke database">
+      <option name="closed" value="true" />
+      <created>1731532235127</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1731532235127</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -154,11 +156,23 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="first commit" />
+    <MESSAGE value="logs deteksi mukak ke database" />
+    <option name="LAST_COMMIT_MESSAGE" value="logs deteksi mukak ke database" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/simple_facerec.py</url>
+          <line>44</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/WhoIsThat$simple_facerec.coverage" NAME="simple_facerec Coverage Results" MODIFIED="1731531946519" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/WhoIsThat$main_video.coverage" NAME="main_video Coverage Results" MODIFIED="1731532019553" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/WhoIsThat$main_video.coverage" NAME="main_video Coverage Results" MODIFIED="1731532844238" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/WhoIsThat$image_comparison.coverage" NAME="image_comparison Coverage Results" MODIFIED="1731529271451" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/WhoIsThat$main.coverage" NAME="main Coverage Results" MODIFIED="1731529234480" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/WhoIsThat$facerecog.coverage" NAME="facerecog Coverage Results" MODIFIED="1731328495366" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
