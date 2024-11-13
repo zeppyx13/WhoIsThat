@@ -17,10 +17,10 @@ last_detection_time = {}
 
 def save_detection_to_db(name, location=None, confidence_level=None):
     try:
-        # Hanya simpan jika confidence_level > 0.5
-        if confidence_level is not None and confidence_level > 0.5:
+        # Simpan semua data jika nama adalah 'Unknown' atau jika confidence_level > 0.5 untuk wajah yang dikenal
+        if name == 'Unknown' or (confidence_level is not None and confidence_level > 0.5):
             # Konversi confidence_level ke float (Python native)
-            confidence_level = float(confidence_level)
+            confidence_level = float(confidence_level) if confidence_level is not None else None
 
             # Proses penyimpanan ke database
             conn = mysql.connector.connect(**db_config)
