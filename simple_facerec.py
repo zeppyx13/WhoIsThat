@@ -49,6 +49,7 @@ class SimpleFacerec:
         :param model: 'hog' for CPU or 'cnn' for GPU.
         :return: List of face locations and names.
         """
+        # Resize frame for faster processing
         small_frame = cv2.resize(frame, (0, 0), fx=self.frame_resizing, fy=self.frame_resizing, interpolation=cv2.INTER_LINEAR)
         rgb_small_frame = cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
 
@@ -61,17 +62,14 @@ class SimpleFacerec:
             matches = face_recognition.compare_faces(self.known_face_encodings, face_encoding)
             name = "Unknown"
 
-            # Calculate face distances and find the closest match
-            if matches:
-                face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
-                best_match_index = np.argmin(face_distances)
-                if matches[best_match_index]:
-                    name = self.known_face_names[best_match_index]
+            # Find the known face with the smallest distance to the new face
+            face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
+            best_match_index = np.argmin(face_distances)
+            if matches[best_match_index]:
+                name = self.known_face_names[best_match_index]
 
             face_names.append(name)
 
-        # Adjust face locations based on the resizing scale
-        face_locations = np.array(face_locations)
-        face_locations = (face_locations / self.frame_resizing).astype(int)
-
-        return face_locations, face_names
+        # Scale face locations back up to the original frame size
+        face_locations = np.array(face_locations) / self.frame_resizing
+        return face_locations.astype(int), face_names
