@@ -1,0 +1,8 @@
+/detected/
+detected/
+/.idea/
+.idea/
+/.vscode/
+.venv/
+__pycache__/
+*.pyc

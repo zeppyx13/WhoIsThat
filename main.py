@@ -3,6 +3,7 @@ import mysql.connector
 from Logic_Recognition import SimpleFacerec
 import threading
 import time
+import os
 
 # Konfigurasi koneksi ke database MySQL
 db_config = {
@@ -15,11 +16,15 @@ db_config = {
 # Variabel untuk menyimpan waktu deteksi terakhir dari setiap nama
 last_detection_time = {}
 
+# Path untuk menyimpan foto yang diambil
+detected_folder = "detected"
+os.makedirs(detected_folder, exist_ok=True)
+
+
 def save_detection_to_db(name, location=None, confidence_level=None):
     try:
         # Simpan semua data jika nama adalah 'Unknown' atau jika confidence_level > 0.5 untuk wajah yang dikenal
         if name == 'Unknown' or (confidence_level is not None and confidence_level > 0.5):
-            # Konversi confidence_level ke float (Python native)
             confidence_level = float(confidence_level) if confidence_level is not None else None
 
             # Proses penyimpanan ke database
@@ -36,6 +41,14 @@ def save_detection_to_db(name, location=None, confidence_level=None):
     except mysql.connector.Error as err:
         print(f"Error: {err}")
 
+
+def save_image(frame, name):
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    filename = f"{detected_folder}/{name}_{timestamp}.jpg"
+    cv2.imwrite(filename, frame)
+    print(f"Image saved: {filename}")
+
+
 # Encode wajah dari folder
 sfr = SimpleFacerec()
 sfr.load_encoding_images("Member/")
@@ -46,6 +59,7 @@ cap = cv2.VideoCapture(0)
 # Set resolusi kamera agar performa lebih baik
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
 
 def process_frame():
     while True:
@@ -70,9 +84,11 @@ def process_frame():
                             2)
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 200), 4)
 
-                # Periksa jeda waktu sebelum input data yang sama
-                if name not in last_detection_time or (current_time - last_detection_time[name] > 4):
+                # Jika confidence level di atas 0.5 dan nama belum terdeteksi dalam 10 detik terakhir, simpan foto
+                if confidence > 0.5 and (
+                        name not in last_detection_time or (current_time - last_detection_time[name] > 10)):
                     save_detection_to_db(name, 'Camera 1', confidence)
+                    save_image(frame, name)
                     last_detection_time[name] = current_time  # Perbarui waktu deteksi terakhir
 
         # Tampilkan frame
@@ -81,6 +97,7 @@ def process_frame():
         key = cv2.waitKey(1)
         if key == 27:  # Tekan 'Esc' untuk keluar
             break
+
 
 # Jalankan pemrosesan frame di thread terpisah
 thread = threading.Thread(target=process_frame)
