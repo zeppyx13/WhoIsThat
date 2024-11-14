@@ -1,6 +1,6 @@
 import cv2
 import mysql.connector
-from simple_facerec import SimpleFacerec
+from Logic_Recognition import SimpleFacerec
 import threading
 import time
 
