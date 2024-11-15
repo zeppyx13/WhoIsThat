@@ -42,7 +42,7 @@ class SimpleFacerec:
 
         print("Encoding images loaded")
 
-    def detect_known_faces(self, frame, model='hog'):
+    def detect_known_faces(self, frame, model='cnn'):
         # hog is faster but less accurate (CPU), cnn is slower but more accurate (GPU)
         small_frame = cv2.resize(frame, (0, 0), fx=self.frame_resizing, fy=self.frame_resizing,
                                  interpolation=cv2.INTER_LINEAR)

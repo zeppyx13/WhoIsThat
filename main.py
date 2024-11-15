@@ -20,8 +20,7 @@ last_detection_time = {}
 detected_folder = "detected"
 os.makedirs(detected_folder, exist_ok=True)
 
-
-def save_detection_to_db(name, location=None, confidence_level=None):
+def db_save(name, location=None, confidence_level=None, foto=None):
     try:
         # Simpan semua data jika nama adalah 'Unknown' atau jika confidence_level > 0.5 untuk wajah yang dikenal
         if name == 'Unknown' or (confidence_level is not None and confidence_level > 0.5):
@@ -31,23 +30,22 @@ def save_detection_to_db(name, location=None, confidence_level=None):
             conn = mysql.connector.connect(**db_config)
             cursor = conn.cursor()
             query = '''
-                INSERT INTO detected_faces (name, location, confidence_level)
-                VALUES (%s, %s, %s)
+                INSERT INTO detected_faces (name, location, confidence_level, foto)
+                VALUES (%s, %s, %s, %s)
             '''
-            cursor.execute(query, (name, location, confidence_level))
+            cursor.execute(query, (name, location, confidence_level, foto))
             conn.commit()
             cursor.close()
             conn.close()
     except mysql.connector.Error as err:
         print(f"Error: {err}")
 
-
 def save_image(frame, name):
     timestamp = time.strftime("%Y%m%d_%H%M%S")
     filename = f"{detected_folder}/{name}_{timestamp}.jpg"
     cv2.imwrite(filename, frame)
     print(f"Image saved: {filename}")
-
+    return filename
 
 # Encode wajah dari folder
 sfr = SimpleFacerec()
@@ -59,7 +57,6 @@ cap = cv2.VideoCapture(0)
 # Set resolusi kamera agar performa lebih baik
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-
 
 def process_frame():
     while True:
@@ -80,16 +77,14 @@ def process_frame():
 
             # Pastikan wajah tidak terlalu dekat dengan kamera
             if (x2 - x1) > 100 and (y2 - y1) > 100:  # Cek ukuran minimal wajah
-                cv2.putText(frame, f"{name} ({confidence:.2f})", (x1, y1 - 10), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 200),
-                            2)
+                cv2.putText(frame, f"{name} ({confidence:.2f})", (x1, y1 - 10), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 200), 2)
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 200), 4)
 
                 # Jika confidence level di atas 0.5 dan nama belum terdeteksi dalam 10 detik terakhir, simpan foto
-                if confidence > 0.5 and (
-                        name not in last_detection_time or (current_time - last_detection_time[name] > 10)):
-                    save_detection_to_db(name, 'Camera 1', confidence)
-                    save_image(frame, name)
-                    last_detection_time[name] = current_time  # Perbarui waktu deteksi terakhir
+                if confidence > 0.5 and (name not in last_detection_time or (current_time - last_detection_time[name] > 10)):
+                    filename = save_image(frame, name)  # Ambil path file yang disimpan
+                    db_save(name, 'Camera 1', confidence, filename)
+                    last_detection_time[name] = current_time
 
         # Tampilkan frame
         cv2.imshow("Frame", frame)
@@ -97,7 +92,6 @@ def process_frame():
         key = cv2.waitKey(1)
         if key == 27:  # Tekan 'Esc' untuk keluar
             break
-
 
 # Jalankan pemrosesan frame di thread terpisah
 thread = threading.Thread(target=process_frame)
